@@ -5,7 +5,7 @@
   "scripts": {
     "build": "dotenv -- turbo run build",
     "clean": "turbo run clean",
-    "dev": "dotenv -e .env.development turbo run dev",
+    "dev": "dotenv -e .env.development -e .env.development.local -- turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "test": "turbo run test"
