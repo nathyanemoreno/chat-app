@@ -3,7 +3,7 @@ import { UserMock } from "~/mocks/UserMock";
 
 //! TODO: Integrate with database
 const getUserById = (userId: string): Promise<User | null> => {
-  const userMock = new UserMock(userId, "Not Jon Doe", "Doye");
+  const userMock = new UserMock(userId, "Not Jon Doe", "Doe", "notjohndoe@gmail.com", " 12345678");
 
   return Promise.resolve(userMock as User);
 };
