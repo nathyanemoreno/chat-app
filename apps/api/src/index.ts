@@ -1,4 +1,4 @@
-import { createServer } from "./server";
+import { createServer } from "~/server/createServer";
 import { log } from "@repo/logger";
 
 const port = process.env.API_PORT || 4001;

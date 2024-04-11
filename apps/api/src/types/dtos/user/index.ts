@@ -5,4 +5,10 @@ interface UserDTO {
   nickname: string;
 }
 
-export type { UserDTO };
+interface CreateUserParams {
+  name: string;
+  password: string;
+  nickname: string;
+}
+
+export type { UserDTO, CreateUserParams };
