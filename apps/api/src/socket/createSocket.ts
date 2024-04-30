@@ -2,6 +2,7 @@ import { log } from "@repo/logger";
 import { Server } from "http";
 import { Server as IOServer, Socket } from "socket.io";
 import { authMiddleware } from "./middlewares/auth-middleware";
+import { onPrivateMessage } from "./sockets/message";
 import { onUserJoin } from "./sockets/user/user-join";
 
  //Username is unique
@@ -18,6 +19,8 @@ const onConnection = (io: IOServer, socket: Socket) => {
   log("initial transport " + socket.conn.transport.name); // prints "polling"
 
   onUserJoin(socket);
+  
+  onPrivateMessage(io, socket);
 
   socket.on("disconnect", () => {
     console.log(`User ${socket.id} disconnected`);
