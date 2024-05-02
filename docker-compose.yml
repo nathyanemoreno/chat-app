@@ -28,10 +28,10 @@ x-certbot: &certbot
 services:
   mongo1:
     image: mongo:6.0
-    container_name: mongo1
+    container_name: chatapp-mongodb
     volumes:
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - mongodb-data:/data/db
+      - ./mongo:/docker-entrypoint-initdb.d/:ro
     environment:
       PUID: 1000
       PGID: 1000
@@ -40,12 +40,15 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
     expose:
       - ${MONGODB_PORT}
+    ports:
+      - 27018:27017
     restart: always
     networks:
       - default
     profiles:
       - production
       - development
+      - backend
     env_file:
     - path: .env.development
       required: true
