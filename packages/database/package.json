@@ -3,14 +3,22 @@
   "version": "0.0.0",
   "main": "./index.ts",
   "types": "./index.ts",
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed/initData.ts"
+  },
   "scripts": {
-    "db:generate": "dotenv -- prisma generate",
+    "db:generate": "dotenv -- prisma generate && prisma format",
     "db:push": "dotenv -- prisma db push --skip-generate"
   },
   "dependencies": {
-    "@prisma/client": "latest"
+    "@prisma/client": "latest",
+    "bcrypt": "^5.1.1"
   },
   "devDependencies": {
-    "prisma": "latest"
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20.11.24",
+    "prisma": "latest",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }
