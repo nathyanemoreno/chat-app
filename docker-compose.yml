@@ -1,5 +1,5 @@
 x-nginx: &nginx
-  container_name: rpd-nginx
+  container_name: chatapp-nginx
   image: nginx:1.19-alpine
   volumes:
     - ./nginx/${NODE_ENV}/templates:/etc/nginx/templates:ro
@@ -7,7 +7,7 @@ x-nginx: &nginx
     - ./certbot/www:/var/www/certbot
 
 x-certbot: &certbot
-  container_name: rpd-certbot
+  container_name: chatapp-certbot
   image: certbot/certbot
   # Add --force-renew flag when in production
   command: >-
@@ -26,9 +26,9 @@ x-certbot: &certbot
 
 
 services:
-  mongo:
+  mongo1:
     image: mongo:6.0
-    container_name: rpd-mongodb
+    container_name: mongo1
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - mongodb-data:/data/db
@@ -52,7 +52,7 @@ services:
     - path: .env
       required: false
   web:
-    container_name: rpd-web
+    container_name: chatapp-web
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
@@ -70,7 +70,7 @@ services:
     - path: .env
       required: false
   api:
-    container_name: rpd-api
+    container_name: chatapp-api
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
@@ -106,7 +106,7 @@ services:
       - certification
   nginx-init:
     <<: *nginx
-    container_name: rpd-nginx-init # Unique container name for nginx-init service
+    container_name: chatapp-nginx-init # Unique container name for nginx-init service
     volumes:
       - ./nginx/production/default_init.conf:/etc/nginx/nginx.conf:ro
     profiles:
