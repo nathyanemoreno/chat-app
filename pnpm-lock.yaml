@@ -143,6 +143,9 @@ importers:
       '@mermaid-js/mermaid-cli':
         specifier: ^10.9.0
         version: 10.9.0(typescript@5.4.3)
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@types/bcrypt':
         specifier: ^5.0.2
         version: 5.0.2
