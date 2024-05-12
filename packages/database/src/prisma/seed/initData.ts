@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { ENV_VARIABLES } from "../../config/env";
-import { hashPassword } from "../utils/hash";
+import { hashPassword } from "../../utils/hash";
 
 const prisma = new PrismaClient();
 

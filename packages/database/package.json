@@ -4,7 +4,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed/initData.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed/initData.ts",
+    "schema": "src/prisma/schema.prisma"
   },
   "scripts": {
     "db:generate": "dotenv -- prisma generate && prisma format",
