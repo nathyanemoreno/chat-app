@@ -12,8 +12,8 @@ x-certbot: &certbot
   # Add --force-renew flag when in production
   command: >-
     certonly --non-interactive --agree-tos --no-eff-email
-    --webroot -w /var/www/certbot 
-    --email ${CERTBOT_EMAIL} 
+    --webroot -w /var/www/certbot
+    --email ${CERTBOT_EMAIL}
     -d ${DOMAIN}
   volumes:
     - ./certbot/conf:/etc/letsencrypt
@@ -24,36 +24,44 @@ x-certbot: &certbot
     - path: .env
       required: false
 
-
 services:
-  mongo:
-    image: mongo:6.0
-    container_name: chatapp-mongodb
+  mongo1:
+    image: mongo:7.0
+    container_name: chatapp-mongo-1
     volumes:
-      - mongodb-data:/data/db
-      - ./mongo:/docker-entrypoint-initdb.d/:ro
+      - mongodb-data-1:/data/db
+    hostname: chatapp-mongo-1
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
     environment:
       PUID: 1000
       PGID: 1000
       MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
-    expose:
-      - ${MONGODB_PORT}
-    ports:
-      - 27018:27017
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     restart: always
-    networks:
-      - default
     profiles:
       - production
       - development
       - backend
     env_file:
-    - path: .env.development
-      required: true
-    - path: .env
-      required: false
+      - path: .env.development
+        required: true
+      - path: .env
+        required: false
+    command: mongod --replSet rs0 --port 27017 --dbpath /data/db --bind_ip_all --wiredTigerCacheSizeGB 1
+    networks:
+      default:
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'chatapp-mongo-1:27017'}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 5s
+      start_interval: 1s
+      retries: 30
+
   web:
     container_name: chatapp-web
     build:
@@ -68,10 +76,10 @@ services:
       - development
       - production
     env_file:
-    - path: .env.development
-      required: true
-    - path: .env
-      required: false
+      - path: .env.development
+        required: true
+      - path: .env
+        required: false
   api:
     container_name: chatapp-api
     build:
@@ -86,10 +94,10 @@ services:
       - development
       - production
     env_file:
-    - path: .env.development
-      required: true
-    - path: .env
-      required: false
+      - path: .env.development
+        required: true
+      - path: .env
+        required: false
   nginx:
     <<: *nginx
     restart: always
@@ -123,4 +131,4 @@ networks:
     driver: bridge
 
 volumes:
-  mongodb-data:
+  mongodb-data-1:

@@ -8,7 +8,11 @@
     "dev": "dotenv -e .env.development turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "compose:up": "dotenv -e .env.development docker compose --profiles backend up mongo1 -d",
+    "compose:down": "dotenv -e .env.development docker compose down mongo1",
+    "compose:build": "dotenv -e .env.development docker compose --build --force-recreate --profiles backend up mongo1 -d -V",
+    "compose:prune": "docker compose down -v --rmi all mongo1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
