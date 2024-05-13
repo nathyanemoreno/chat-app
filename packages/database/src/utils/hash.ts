@@ -13,4 +13,16 @@ async function hashPassword(password: string): Promise<string> {
   }
 }
 
-export { hashPassword };
+// Function to verify a password
+async function verifyPassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
+  try {
+    // Use bcrypt to compare the entered password with the stored hash
+    const match = await bcrypt.compare(plainTextPassword, hashedPassword);
+    return match;
+  } catch (error) {
+    console.error("Error verifying password:", error);
+    throw error;
+  }
+}
+
+export { hashPassword, verifyPassword };
