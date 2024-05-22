@@ -9,9 +9,10 @@ generator client {
 }
 
 generator erd {
-  provider = "prisma-erd-generator"
-  output   = "ERD.svg"
-  theme    = "neutral"
+  provider                  = "prisma-erd-generator"
+  output                    = "ERD.svg"
+  theme                     = "neutral"
+  includeRelationFromFields = true
 }
 
 datasource db {
@@ -20,33 +21,54 @@ datasource db {
 }
 
 model User {
-  id       String            @id @default(auto()) @map("_id") @db.ObjectId
-  email    String            @unique
-  password String
-  nickname String?
-  name     String?
-  groups   GroupEnrollment[]
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  email     String            @unique
+  password  String
+  status    String?           @default("I am on ChatApp")
+  name      String?
+  nickname  String?
+  groups    GroupEnrollment[] @relation("belongs")
+  chats     ChatEnrollment[]
+  createdAt DateTime          @default(now())
+}
+
+model Chat {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  creatorId String
+  createdAt DateTime         @default(now())
+  members   ChatEnrollment[]
+}
+
+model ChatEnrollment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  chatId    String   @db.ObjectId
+  chat      Chat     @relation(fields: [chatId], references: [id])
 }
 
 model Group {
-  id      String            @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  members GroupEnrollment[]
+  id           String            @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  createdAt    DateTime          @default(now())
+  creatorId    String
+  groupDetails String?
+  members      GroupEnrollment[] @relation("contains")
 }
 
 model GroupEnrollment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
   role      UserRole
-
-  userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
-
-  groupId String @db.ObjectId
-  group   Group  @relation(fields: [groupId], references: [id])
+  userId    String   @db.ObjectId
+  user      User     @relation("belongs", fields: [userId], references: [id])
+  groupId   String   @db.ObjectId
+  group     Group    @relation("contains", fields: [groupId], references: [id])
 }
 
 enum UserRole {
+  PAST_MEMBER
   MEMBER
   ADMIN
 }

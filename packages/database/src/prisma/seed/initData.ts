@@ -28,10 +28,11 @@ async function main() {
       nickname: "Administrator",
     },
   });
- 
+
   const allUsers = await prisma.group.create({
     data: {
       name: "AllUsers",
+      creatorId: "1",
       members: {
         create: {
           role: "MEMBER",
@@ -47,8 +48,8 @@ async function main() {
       members: true,
     },
   });
- 
- const tester = await prisma.user.upsert({
+
+  const tester = await prisma.user.upsert({
     where: { email: "tester@nappla.com" },
     update: {},
     create: {
@@ -61,14 +62,13 @@ async function main() {
           role: "MEMBER",
           group: {
             connect: {
-              id: allUsers.id
-            }
-          }
-        }
-      }
+              id: allUsers.id,
+            },
+          },
+        },
+      },
     },
   });
-
 }
 
 main()
