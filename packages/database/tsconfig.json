@@ -5,7 +5,8 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "types": ["jest"],
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "strictNullChecks": true
   },
   "include": ["src"],
   "exclude": ["node_modules"],
